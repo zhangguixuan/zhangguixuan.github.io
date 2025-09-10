@@ -8,7 +8,7 @@
       <link href="/2025/09/09/vscode%20%E8%AF%86%E5%88%AB%E4%B8%8D%E5%88%B0git%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"/>
       <url>/2025/09/09/vscode%20%E8%AF%86%E5%88%AB%E4%B8%8D%E5%88%B0git%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</url>
       
-        <content type="html"><![CDATA[<h1 id="vscode-识别不到git的解决方案"><a class="markdownIt-Anchor" href="#vscode-识别不到git的解决方案"></a> vscode 识别不到git的解决方案</h1><h2 id="遇到问题"><a class="markdownIt-Anchor" href="#遇到问题"></a> 遇到问题</h2><p>当我第一次拿到Mac新机时，我先安装了git，在下载vs code后，发现vs code没有识别到git，弹出如下提示：</p><img src="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/202509101707558.png" style="zoom:50%;" /><p>上网提到的原因如下：</p><ol><li><p>没有安装git<br />**解决方案：**下载git</p></li><li><p>VS Code没有配置正确的git路径。</p><p>**解决方案：**设置中搜索<code>git.path</code>并手动指定Git可执行文件的正确路径，然后重启VS Code即可解决。</p></li></ol><p>然而在检测确认 Git 已经成功安装，并正确配置了vs code的git path后，依旧识别不到git，而在终端却可以使用git 命令</p><p><img src="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/202509101707572.png" alt="image-20250909094509079" /></p><p><img src="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/202509101707584.png" alt="image-20250909094546967" /></p><h2 id="探索过程"><a class="markdownIt-Anchor" href="#探索过程"></a> 探索过程</h2><ol><li><p>猜测🤔是账号同步导致配置错误（<code>我的原电脑是windows，我怕同步配置会把win的vs code配置也配给了Mac的vs code</code>）</p></li><li><p>尝试删除vs code本地数据并卸载vs code，然后重装</p></li><li><p>尝试卸载Xcode并重装(感觉有些复杂放弃了)</p></li></ol><h2 id="解决思路"><a class="markdownIt-Anchor" href="#解决思路"></a> 解决思路</h2><p><strong>查看是否重复安装了git，导致异常出现</strong></p><p>可参考下文进行其中一个的git卸载：</p><p><a href="https://blog.csdn.net/qq_39052513/article/details/104637326">https://blog.csdn.net/qq_39052513/article/details/104637326</a></p><p>卸载完成后，重新加载vs code即可解决</p><p><img src="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/202509101707594.png" alt="image-20250909095135162" /></p>]]></content>
+        <content type="html"><![CDATA[<h1 id="vscode-识别不到git的解决方案"><a class="markdownIt-Anchor" href="#vscode-识别不到git的解决方案"></a> vscode 识别不到git的解决方案</h1><h2 id="遇到问题"><a class="markdownIt-Anchor" href="#遇到问题"></a> 遇到问题</h2><p>当我第一次拿到Mac新机时，我先安装了git，在下载vs code后，发现vs code没有识别到git，弹出如下提示：</p><img src="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/202509101707558.png" style="zoom:50%;" /><p>上网提到的原因如下：</p><ol><li><p>没有安装git</p><p><strong>解决方案</strong>：下载git</p></li><li><p>VS Code没有配置正确的git路径</p><p><strong>解决方案</strong>：设置中搜索<code>git.path</code>并手动指定Git可执行文件的正确路径，然后重启VS Code即可解决。</p></li></ol><p>然而在检测确认 Git 已经成功安装，并正确配置了vs code的git path后，依旧识别不到git，而在终端却可以使用git 命令</p><p><img src="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/202509101707572.png" alt="image-20250909094509079" /></p><p><img src="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/202509101707584.png" alt="image-20250909094546967" /></p><h2 id="探索过程"><a class="markdownIt-Anchor" href="#探索过程"></a> 探索过程</h2><ol><li><p>猜测🤔是账号同步导致配置错误（<code>我的原电脑是windows，我怕同步配置会把win的vs code配置也配给了Mac的vs code</code>）</p></li><li><p>尝试删除vs code本地数据并卸载vs code，然后重装</p></li><li><p>尝试卸载Xcode并重装(感觉有些复杂放弃了)</p></li></ol><h2 id="解决思路"><a class="markdownIt-Anchor" href="#解决思路"></a> 解决思路</h2><p><strong>查看是否重复安装了git，导致异常出现</strong></p><p>可参考下文进行其中一个的git卸载：</p><p><a href="https://blog.csdn.net/qq_39052513/article/details/104637326">https://blog.csdn.net/qq_39052513/article/details/104637326</a></p><p>卸载完成后，重新加载vs code即可解决</p><p><img src="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/202509101707594.png" alt="image-20250909095135162" /></p>]]></content>
       
       
       <categories>
@@ -73,19 +73,6 @@
             <tag> Java学习笔记 </tag>
             
         </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>hhh</title>
-      <link href="/2025/08/30/hhh/"/>
-      <url>/2025/08/30/hhh/</url>
-      
-        <content type="html"><![CDATA[<p><mark>高亮</mark></p><h1 id="哈哈"><a class="markdownIt-Anchor" href="#哈哈"></a> 哈哈</h1><p>你好</p><p>大利空玫琳凯</p><p>的卡魄我看到怕</p><p>大窘为加密</p><h1 id="西"><a class="markdownIt-Anchor" href="#西"></a> 西</h1><img src="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/%E9%82%93%E7%B4%AB%E6%A3%8B1.png" style="zoom: 33%;" />]]></content>
-      
-      
       
     </entry>
     
