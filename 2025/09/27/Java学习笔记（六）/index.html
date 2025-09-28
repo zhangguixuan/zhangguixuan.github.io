@@ -1,0 +1,573 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Java学习笔记（六） | 麻瓜的小窝</title><meta name="author" content="会魔法的麻瓜"><meta name="copyright" content="会魔法的麻瓜"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="无限进步！！（类与对象、属性及方法、重载、可变参数、构造器、this、作用域、递归）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java学习笔记（六）">
+<meta property="og:url" content="http://example.com/2025/09/27/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%85%AD%EF%BC%89/index.html">
+<meta property="og:site_name" content="麻瓜的小窝">
+<meta property="og:description" content="无限进步！！（类与对象、属性及方法、重载、可变参数、构造器、this、作用域、递归）">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/%E5%A4%8F%E6%97%A5%E6%99%B4%E5%A4%A9.jpg">
+<meta property="article:published_time" content="2025-09-27T13:34:51.000Z">
+<meta property="article:modified_time" content="2025-09-28T11:15:29.720Z">
+<meta property="article:author" content="会魔法的麻瓜">
+<meta property="article:tag" content="Java学习笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/%E5%A4%8F%E6%97%A5%E6%99%B4%E5%A4%A9.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Java学习笔记（六）",
+  "url": "http://example.com/2025/09/27/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%85%AD%EF%BC%89/",
+  "image": "https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/%E5%A4%8F%E6%97%A5%E6%99%B4%E5%A4%A9.jpg",
+  "datePublished": "2025-09-27T13:34:51.000Z",
+  "dateModified": "2025-09-28T11:15:29.720Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "会魔法的麻瓜",
+      "url": "https://zhangguixuan.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/avatar.jpg"><link rel="canonical" href="http://example.com/2025/09/27/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%85%AD%EF%BC%89/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":150,"languages":{"author":"作者: 会魔法的麻瓜","link":"链接: ","source":"来源: 麻瓜的小窝","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-center"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Java学习笔记（六）',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/%E7%BD%91%E7%8A%B6%E5%9B%BE.png);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/%E5%A4%8F%E6%97%A5%E6%99%B4%E5%A4%A9.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/avatar.jpg" alt="Logo"><span class="site-name">麻瓜的小窝</span></a><a class="nav-page-title" href="/"><span class="site-name">Java学习笔记（六）</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Java学习笔记（六）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-09-27T13:34:51.000Z" title="发表于 2025-09-27 21:34:51">2025-09-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-28T11:15:29.720Z" title="更新于 2025-09-28 19:15:29">2025-09-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AC%94%E8%AE%B0/">笔记</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">3.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>11分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="java学习笔记六"><a class="markdownIt-Anchor" href="#java学习笔记六"></a> Java学习笔记（六）</h1>
+<h2 id="类与对象"><a class="markdownIt-Anchor" href="#类与对象"></a> 类与对象</h2>
+<p><strong>引入原因</strong>：</p>
+<ol>
+<li>
+<p>使用<em>单独变量</em>难以进行数据管理</p>
+</li>
+<li>
+<p>使用<em>数组</em>:</p>
+<p>(1)数据类型体现不出来(2) 只能通过[下标]获取信息，造成变量名字和内容的对应关系不明确(3) 不能体现行为</p>
+</li>
+</ol>
+<h3 id="介绍"><a class="markdownIt-Anchor" href="#介绍"></a> 介绍</h3>
+<p>类是一个<mark>引用数据类型</mark>，包括<strong>属性</strong>（全局变量）和<strong>行为</strong>（方法等）两部分。用于方便对一个整体的相互关联的数据进行管理</p>
+<p>对象是类的一个具体实例，可以简单理解为类是一个自定义的数据类型，对象是用该数据类型定义的一个变量。</p>
+<img src="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/202509272153726.png" style="zoom:50%;" />
+<p><strong>类和对象的区别和联系</strong>:</p>
+<ol>
+<li>类是抽象的，概念的，代表一类事物,比如人类,猫类…, 即它是数据类型</li>
+<li>对象是具体的，实际的，代表一个具体事物, 即 是实例</li>
+<li>类是对象的模板，对象是类的一个个体，对应一个实例</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Car</span> &#123;</span><br><span class="line">  String name;<span class="comment">//属性, 成员变量, 字段 field</span></span><br><span class="line">  <span class="type">double</span> price;</span><br><span class="line">  String color;</span><br><span class="line">  String[] master;<span class="comment">//属性可以是基本数据类型，也可以是引用类型(对象，数组)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="如何创建对象"><a class="markdownIt-Anchor" href="#如何创建对象"></a> 如何创建对象</h3>
+<ol>
+<li>先声明再创建</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Cat cat ; <span class="comment">//声明对象 cat</span></span><br><span class="line">cat = <span class="keyword">new</span> <span class="title class_">Cat</span>(); <span class="comment">//创建</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>直接创建</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Cat</span> <span class="variable">cat</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Cat</span>();</span><br></pre></td></tr></table></figure>
+<h2 id="属性"><a class="markdownIt-Anchor" href="#属性"></a> 属性</h2>
+<ol>
+<li>成员变量 = 属性 = field(字段)</li>
+</ol>
+<ol start="2">
+<li>属性是类的一个组成部分，一般是基本数据类型,也可是引用类型(对象，数组)。比如前面定义猫类 的 int age 就是属性</li>
+</ol>
+<p><strong>使用细节</strong>：</p>
+<blockquote>
+<ol>
+<li>属性的定义语法同变量，示例：访问修饰符  属性类型  属性名;</li>
+</ol>
+<p>访问修饰符： 控制属性的访问范围, 有四种访问修饰符 public, proctected, 默认, private ,后面我会详细介绍</p>
+<ol start="2">
+<li>属性的定义类型可以为<mark>任意类型</mark>，包含基本类型或引用类型</li>
+<li>属性如果不赋值，<mark>有默认值，规则和数组一致</mark></li>
+</ol>
+</blockquote>
+<p><strong>如何访问属性</strong></p>
+<p><code>对象名.属性名</code>:  <a target="_blank" rel="noopener" href="http://cat.name">cat.name</a> ;</p>
+<h2 id="类和对象的内存分配机制"><a class="markdownIt-Anchor" href="#类和对象的内存分配机制"></a> 类和对象的内存分配机制</h2>
+<p><strong>Java 内存的结构分析</strong>:</p>
+<ol>
+<li>栈： 一般存放基本数据类型(局部变量)</li>
+<li>堆： 存放对象(Cat cat , 数组等)</li>
+<li>方法区：常量池(常量，比如字符串)， 类加载信息</li>
+</ol>
+<p><strong>对象在内存中存在形式(重要的)</strong>:</p>
+<img src="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/202509272158018.png" style="zoom: 50%;" />
+<p><strong>Java 创建对象的流程简单分析</strong>:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Person</span> <span class="variable">p</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Person</span>();</span><br><span class="line">p.name = “jack”;</span><br><span class="line">p.age = <span class="number">10</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>先加载 Person 类信息(属性和方法信息, 只会加载一次)</li>
+<li>在堆中分配空间, 进行默认初始化(看规则)</li>
+<li>把地址赋给 p , p 就指向对象</li>
+<li>进行指定初始化， 比如 <a target="_blank" rel="noopener" href="http://p.name">p.name</a> =”jack”     p.age = 10</li>
+</ol>
+<h2 id="成员方法"><a class="markdownIt-Anchor" href="#成员方法"></a> 成员方法</h2>
+<p>在某些情况下，我们要需要定义成员方法(简称方法)</p>
+<p>比如人类，除了有一些属性外( 年龄，姓名…),我们人类还有一些行为比如:可以说话、跑步…,通过学习，还可以做算术题。这时就要用<strong>成员方法</strong>才能完成</p>
+<p><strong>方法调用流程</strong>：</p>
+<blockquote>
+<ol>
+<li>
+<p>当程序执行到方法时，就会开辟一个独立的空间（栈空间）</p>
+</li>
+<li>
+<p>当方法执行完毕，或者执行到return语句时，就会返回</p>
+</li>
+<li>
+<p>返回到调用方法的地方</p>
+</li>
+<li>
+<p>返回后，继续执行方法后面的代码</p>
+</li>
+<li>
+<p>当main方法（栈）执行完毕，整个程序退出</p>
+</li>
+</ol>
+</blockquote>
+<p><strong>成员方法的好处</strong></p>
+<ol>
+<li><mark>提高代码的复用性</mark></li>
+<li>可以将实现的细节封装起来，然后供其他用户来调用即可</li>
+</ol>
+<h3 id="成员方法的定义"><a class="markdownIt-Anchor" href="#成员方法的定义"></a> 成员方法的定义</h3>
+<p>访问修饰符 返回数据类型 方法名（形参列表…） {</p>
+<p>​	//方法体</p>
+<p>​	语句；</p>
+<p>​	return 返回值;</p>
+<p>}</p>
+<blockquote>
+<ol>
+<li>形参列表：表示成员方法输入</li>
+<li>返回数据类型：表示成员方法输出, void 表示没有返回值</li>
+<li>方法主体：表示为了实现某一功能代码块</li>
+<li>return 语句不是必须的</li>
+</ol>
+</blockquote>
+<p><strong>返回数据类型</strong></p>
+<ol>
+<li>一个方法<mark>最多有一个返回值</mark>[如何返回多个结果 ——用数组返回 ]</li>
+<li>返回类型可以为任意类型，包含基本类型或引用类型(数组，对象)</li>
+<li>如果方法要求有返回数据类型，则方法体中最后的执行语句必须为 return 值; 而且要求返回值类型必须和 return 的</li>
+</ol>
+<p>值类型一致或兼容</p>
+<ol start="4">
+<li>如果方法是 void，则方法体中可以没有 return 语句，或者 只写 return</li>
+</ol>
+<p><strong>方法名</strong></p>
+<p>遵循<strong>驼峰命名法</strong>，最好见名知义，表达出该功能的意思即可, 比如 得到两个数的和 getSum</p>
+<p><strong>形参列表</strong></p>
+<ol>
+<li>
+<p>一个方法可以有0个参数，也可以有多个参数，中间用逗号隔开，比如getSum(int n1,int n2)</p>
+</li>
+<li>
+<p>参数类型可以为任意类型，包含基本类型或引用类型，比如printArr(int[] map)</p>
+</li>
+<li>
+<p>调用带参数的方法时，一定对应着参数列表传入<strong>相同类型或兼容类型</strong>的参数！</p>
+</li>
+<li>
+<p>方法定义时的参数称为形式参数，简称形参；方法调用时的传入参数称为实际参数，简称实参，<br />
+实参和形参的类型<mark>要一致或兼容、个数、顺序必须一致</mark>！</p>
+</li>
+</ol>
+<p><strong>方法体</strong><br />
+里面写完成功能的具体的语句，可以为输入、输出、变量、运算、分支、循环、方法调用，但里<br />
+面不能再定义方法！即：<mark>方法不能嵌套定义</mark></p>
+<p><strong>方法调用细节说明</strong></p>
+<ol>
+<li>
+<p>同一个类中的方法调用：直接调用即可。比如print（参数);</p>
+</li>
+<li>
+<p>跨类中的方法A类调用B类方法：需要通过对象名调用。比如<code>对象名.方法名(参数)</code></p>
+</li>
+<li>
+<p>特别说明一下：跨类的方法调用和方法的访问修饰符相关</p>
+</li>
+</ol>
+<h3 id="成员方法传参机制"><a class="markdownIt-Anchor" href="#成员方法传参机制"></a> 成员方法传参机制</h3>
+<ul>
+<li>
+<p>基本数据类型，传递的是值（值拷贝），形参的任何改变不影响实参！</p>
+</li>
+<li>
+<p>引用类型传递的是地址（传递也是值，但是值是地址），可以通过形参影响实参！</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//可以以这种方式来比较看p1和p2是否为同一个对象</span></span><br><span class="line">System.out.println(p1 == p2)</span><br></pre></td></tr></table></figure>
+<h2 id="递归"><a class="markdownIt-Anchor" href="#递归"></a> 递归</h2>
+<p><strong>递归就是方法自己调用自己</strong>,每次调用时传入不同的变量.递归有助于编程者解决复杂问题,同时可以让代码变得简洁</p>
+<ul>
+<li>阶乘问题</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">factorial</span><span class="params">(<span class="type">int</span> n)</span> &#123;</span><br><span class="line">  <span class="keyword">if</span>(n == <span class="number">1</span>)&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> factorial(n - <span class="number">1</span>) * n;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>fibonacci数列</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">fibonacci</span><span class="params">(<span class="type">int</span> n)</span> &#123;</span><br><span class="line">  <span class="keyword">if</span>( n &gt;= <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span>( n == <span class="number">1</span> || n == <span class="number">2</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> fibonacci(n-<span class="number">1</span>) + fibonacci(n-<span class="number">2</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          System.out.println(<span class="string">&quot;要求输入的 n&gt;=1 的整数&quot;</span>);</span><br><span class="line">          <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>汉诺塔</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Tower</span> &#123;</span><br><span class="line">    <span class="comment">//num 表示要移动的个数, a, b, c 分别表示 A 塔，B 塔, C 塔</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">move</span><span class="params">(<span class="type">int</span> num , <span class="type">char</span> a, <span class="type">char</span> b ,<span class="type">char</span> c)</span> &#123;</span><br><span class="line">    <span class="comment">//如果只有一个盘 num = 1</span></span><br><span class="line">    <span class="keyword">if</span>(num == <span class="number">1</span>) &#123;</span><br><span class="line">        System.out.println(a + <span class="string">&quot;-&gt;&quot;</span> + c);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">//如果有多个盘，可以看成两个 , 最下面的和上面的所有盘(num-1)</span></span><br><span class="line">      <span class="comment">//(1)先移动上面所有的盘到 b, 借助 c</span></span><br><span class="line">      move(num - <span class="number">1</span> , a, c, b);</span><br><span class="line">      <span class="comment">//(2)把最下面的这个盘，移动到 c</span></span><br><span class="line">      System.out.println(a + <span class="string">&quot;-&gt;&quot;</span> + c);</span><br><span class="line">      <span class="comment">//(3)再把 b 塔的所有盘，移动到 c ,借助 a</span></span><br><span class="line">      move(num - <span class="number">1</span>, b, a, c);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>递归重要规则</strong></p>
+<ol>
+<li>
+<p>执行一个方法时，就<mark>创建一个新的受保护的独立空间（栈空间）</mark>，栈空间也层层销毁</p>
+</li>
+<li>
+<p>方法的局部变量是独立的，不会相互影响，比如n变量</p>
+</li>
+<li>
+<p>如果方法中使用的是<mark>引用类型变量（比如数组，对象），就会共享该引用类型的数据</mark></p>
+</li>
+<li>
+<p>递归必须向退出递归的条件逼近(即<mark>找到基准条件</mark>，比如fibonacci数列就是前两个值为一)，否则就是无限递归，出现StackOverflowError</p>
+</li>
+<li>
+<p>当一个方法执行完毕，或者遇到return，就会返回，遵守谁调用，就将结果返回给谁，同时当方法执行完毕或者返回时，该方法也就执行完毕</p>
+</li>
+</ol>
+<h2 id="方法重载overload"><a class="markdownIt-Anchor" href="#方法重载overload"></a> 方法重载(OverLoad)</h2>
+<p>java 中允许同一个类中，多个同名方法的存在，但<strong>要求形参列表不一致</strong></p>
+<p><strong>重载的好处</strong></p>
+<ol>
+<li>减轻了起名的麻烦</li>
+<li>减轻了记名的麻烦</li>
+</ol>
+<p><strong>使用细节</strong></p>
+<ol>
+<li>
+<p>方法名：必须相同</p>
+</li>
+<li>
+<p>形参列表：必须不同（形参类型或个数或顺序，至少有一样不同，参数名无要求）</p>
+</li>
+<li>
+<p>返回类型：无要求</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyCalculator</span> &#123;</span><br><span class="line">  <span class="comment">//下面的四个 calculate 方法构成了重载</span></span><br><span class="line">  <span class="comment">//两个整数的和</span></span><br><span class="line">  <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">calculate</span><span class="params">(<span class="type">int</span> n1, <span class="type">int</span> n2)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> n1 + n2;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//一个整数，一个 double 的和</span></span><br><span class="line">  <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">calculate</span><span class="params">(<span class="type">int</span> n1, <span class="type">double</span> n2)</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> n1 + n2;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//一个 double ,一个 Int 和</span></span><br><span class="line">  <span class="keyword">public</span> <span class="type">double</span> <span class="title function_">calculate</span><span class="params">(<span class="type">double</span> n1, <span class="type">int</span> n2)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> n1 + n2;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//三个 int 的和</span></span><br><span class="line">  <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">calculate</span><span class="params">(<span class="type">int</span> n1, <span class="type">int</span> n2,<span class="type">int</span> n3)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> n1 + n2 + n2;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="可变参数"><a class="markdownIt-Anchor" href="#可变参数"></a> 可变参数</h2>
+<p>java 允许将同一个类中多个同名同功能但参数个数不同的方法，封装成一个方法。就可以通过可变参数实现</p>
+<p><strong>基本语法</strong></p>
+<blockquote>
+<p>访问修饰符 返回类型 方法名(数据类型 … 形参名) {</p>
+<p>}</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1. int... 表示接受的是可变参数，类型是 int ,即可以接收多个 int(0-多)</span></span><br><span class="line"><span class="comment">//2. 使用可变参数时，可以当做数组来使用 即 nums 可以当做数组</span></span><br><span class="line"><span class="comment">//3. 遍历 nums 求和即可</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">sum</span><span class="params">(<span class="type">int</span>... nums)</span> &#123;</span><br><span class="line">  <span class="comment">//System.out.println(&quot;接收的参数个数=&quot; + nums.length);</span></span><br><span class="line">  <span class="type">int</span> <span class="variable">res</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">      res += nums[i];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>使用细节</strong></p>
+<ol>
+<li>
+<p>可变参数的实参可以为0个或任意多个</p>
+</li>
+<li>
+<p><mark>可变参数的实参可以为数组</mark></p>
+</li>
+<li>
+<blockquote>
+<p>可变参数的本质就是数组</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p>可变参数可以和普通类型的参数一起放在形参列表，但必须保证可变参数在最后</p>
+</blockquote>
+</li>
+<li>
+<p>一个形参列表中只能出现一个可变参数</p>
+</li>
+</ol>
+<h2 id="作用域"><a class="markdownIt-Anchor" href="#作用域"></a> 作用域</h2>
+<p><strong>基本使用</strong></p>
+<ol>
+<li>
+<p>在java编程中，主要的变量就是属性（成员变量）和局部变量。</p>
+</li>
+<li>
+<p>我们说的局部变量一般是指在成员方法中定义的变量。</p>
+</li>
+<li>
+<p>java中作用域的分类<br />
+全局变量：也就是属性，作用域为整个类体Cat类：cry、eat等方法使用属性<br />
+局部变量：也就是除了属性之外的其他变量，作用域为定义它的代码块中！</p>
+</li>
+<li>
+<p>全局变量（属性）可以不赋值，直接使用，因为有默认值，局部变量必须赋值后，<br />
+才能使用，因为没有默认值。</p>
+</li>
+</ol>
+<p><strong>注意事项</strong></p>
+<ol>
+<li>
+<p>属性和局部变量可以重名，<mark>访问时遵循就近原则</mark></p>
+</li>
+<li>
+<p>在同一个作用域中，比如在同一个成员方法中，两个局部变量，不能重名</p>
+</li>
+<li>
+<p>属性生命周期较长，伴随着对象的创建而创建，伴随着对象的销毁而销毁。局部变<br />
+量，生命周期较短，伴随着它的代码块的执行而创建，伴随着代码块的结束而销毁<br />
+即在一次方法调用过程中</p>
+</li>
+<li>
+<p>作用域范围不同<br />
+全局变量/属性：可以被本类使用，或其他类使用（通过对象调用）<br />
+局部变量：只能在本类中对应的方法中使用</p>
+</li>
+<li>
+<p>修饰符不同<br />
+全局变量/属性可以加修饰符<br />
+局部变量不可以加修饰符</p>
+</li>
+</ol>
+<h2 id="构造方法构造器"><a class="markdownIt-Anchor" href="#构造方法构造器"></a> 构造方法/构造器</h2>
+<p><strong>介绍</strong>：构造方法又叫构造器(constructor)，是类的一种特殊的方法，它的<em>主要作用是完成对新对象的初始化</em>。它有几个特点：</p>
+<ol>
+<li>方法名和类名相同</li>
+<li>没有返回值</li>
+<li>在创建对象时，系统会自动的调用该类的构造器完成对象的初始化</li>
+</ol>
+<p><strong>基本语法</strong></p>
+<blockquote>
+<p>修饰符  方法名 (形参列表) {</p>
+<p>​	方法体;</p>
+<p>}</p>
+</blockquote>
+<p><strong>使用细节</strong></p>
+<ol>
+<li>
+<p>一个类可以定义多个不同的构造器，即<mark>构造器重载</mark><br />
+比如：我们可以再给Person类定义一个构造器，用来创建对象的时候，只指定人名，不需要指定年龄</p>
+</li>
+<li>
+<p><strong>构造器名和类名要相同</strong></p>
+</li>
+<li>
+<p><mark>构造器没有返回值，也不能写void</mark></p>
+</li>
+<li>
+<p><strong>构造器是完成对象的初始化，并不是创建对象</strong></p>
+</li>
+<li>
+<p>在创建对象时，系统自动的调用该类的构造方法</p>
+</li>
+<li>
+<blockquote>
+<p>如果程序员没有定义构造器，系统会自动给类生成一个默认无参构造器（也<br />
+叫默认构造器），比如Dog(){}，使用<code>javap</code>指令反编译看看</p>
+</blockquote>
+</li>
+<li>
+<p>一旦定义了自己的构造器，默认的构造器就覆盖了，就<strong>不能再使用默认的无<br />
+参构造器，除非显式的定义一下</strong>，即：Dog(){}写（这点很重要）</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">  String name;</span><br><span class="line">  <span class="type">int</span> age;</span><br><span class="line">  <span class="comment">//(String pName, int pAge) 是构造器形参列表，规则和成员方法一样</span></span><br><span class="line">  <span class="keyword">public</span> <span class="title function_">Person</span><span class="params">(String pName, <span class="type">int</span> pAge)</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;构造器被调用~~ 完成对象的属性初始化&quot;</span>);</span><br><span class="line">    name = pName;</span><br><span class="line">    age = pAge;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="this关键字"><a class="markdownIt-Anchor" href="#this关键字"></a> this关键字</h2>
+<p>Java虚拟机会给每个对象分配this，代表当前对象</p>
+<ul>
+<li>可以用来解决属性和局部变量重名而导致的异常问题</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">  String name;</span><br><span class="line">  <span class="type">int</span> age;</span><br><span class="line">  <span class="comment">//构造器</span></span><br><span class="line">  <span class="keyword">public</span> <span class="title function_">Person</span><span class="params">(String name, <span class="type">int</span> age)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.name = name;</span><br><span class="line">    <span class="built_in">this</span>.age = age;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//compareTo 比较方法</span></span><br><span class="line">  <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">compareTo</span><span class="params">(Person p)</span> &#123;</span><br><span class="line">    <span class="comment">//名字和年龄完全一样</span></span><br><span class="line">    <span class="comment">// if(this.name.equals(p.name) &amp;&amp; this.age == p.age) &#123;</span></span><br><span class="line">    <span class="comment">// return true;</span></span><br><span class="line">    <span class="comment">// &#125; else &#123;</span></span><br><span class="line">    <span class="comment">// return false;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">this</span>.name.equals(p.name) &amp;&amp; <span class="built_in">this</span>.age == p.age;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>使用细节</strong></p>
+<ol>
+<li>
+<p>this 关键字可以用来访问本类的属性、方法、构造器</p>
+</li>
+<li>
+<p>this 用于区分当前类的属性和局部变量</p>
+</li>
+<li>
+<p>访问成员方法的语法：<code>this.方法名(参数列表);</code></p>
+</li>
+<li>
+<p>访问构造器语法：<code>this(参数列表);</code> 注意只能在构造器中使用(即只能在构造器中访问另外一个构造器, 必须放在第一条语句)</p>
+</li>
+<li>
+<p>this 不能在类定义的外部使用，只能在类定义的方法中使用。</p>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a target="_blank" rel="noopener" href="https://zhangguixuan.github.io">会魔法的麻瓜</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/09/27/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%85%AD%EF%BC%89/">http://example.com/2025/09/27/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%85%AD%EF%BC%89/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">麻瓜的小窝</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">Java学习笔记</a></div><div class="post-share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/%E5%A4%8F%E6%97%A5%E6%99%B4%E5%A4%A9.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/09/20/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%94%EF%BC%89/" title="Java学习笔记（五）"><img class="cover" src="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/%E5%A4%8F%E6%97%A5%E6%99%B4%E5%A4%A9.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Java学习笔记（五）</div></div><div class="info-2"><div class="info-item-1">无限进步！！（排序，数组，查找, equals()）</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/08/31/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/" title="Java学习笔记（一）"><img class="cover" src="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/%E5%A4%8F%E6%97%A5%E6%99%B4%E5%A4%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-08-31</div><div class="info-item-2">Java学习笔记（一）</div></div><div class="info-2"><div class="info-item-1">无限进步！！（JDK,DOS命令，注释，代码规范）</div></div></div></a><a class="pagination-related" href="/2025/09/03/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/" title="Java学习笔记（二）"><img class="cover" src="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/%E5%A4%8F%E6%97%A5%E6%99%B4%E5%A4%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-03</div><div class="info-item-2">Java学习笔记（二）</div></div><div class="info-2"><div class="info-item-1">无限进步！！（变量，数据类型，JavaAPI文档，基本数据类型转换）</div></div></div></a><a class="pagination-related" href="/2025/09/20/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%94%EF%BC%89/" title="Java学习笔记（五）"><img class="cover" src="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/%E5%A4%8F%E6%97%A5%E6%99%B4%E5%A4%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-20</div><div class="info-item-2">Java学习笔记（五）</div></div><div class="info-2"><div class="info-item-1">无限进步！！（排序，数组，查找, equals()）</div></div></div></a><a class="pagination-related" href="/2025/09/10/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/" title="Java学习笔记（三）"><img class="cover" src="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/%E5%A4%8F%E6%97%A5%E6%99%B4%E5%A4%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-10</div><div class="info-item-2">Java学习笔记（三）</div></div><div class="info-2"><div class="info-item-1">无限进步！！（运算符，标识符，关键字，进制，Scanner）</div></div></div></a><a class="pagination-related" href="/2025/09/17/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%9B%9B%EF%BC%89/" title="Java学习笔记（四）"><img class="cover" src="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/%E5%A4%8F%E6%97%A5%E6%99%B4%E5%A4%A9.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-09-17</div><div class="info-item-2">Java学习笔记（四）</div></div><div class="info-2"><div class="info-item-1">无限进步！！（程序流程控制，分支控制，循环控制，跳转控制语句，Math.random()）</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">会魔法的麻瓜</div><div class="author-info-description">投我以桃，报之以桃核</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zhangguixuan"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">welcome to my Blog!  Wish you have a good experience here!</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E5%85%AD"><span class="toc-number">1.</span> <span class="toc-text"> Java学习笔记（六）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E4%B8%8E%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.1.</span> <span class="toc-text"> 类与对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.1.1.</span> <span class="toc-text"> 介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.1.2.</span> <span class="toc-text"> 如何创建对象</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7"><span class="toc-number">1.2.</span> <span class="toc-text"> 属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E5%92%8C%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E6%9C%BA%E5%88%B6"><span class="toc-number">1.3.</span> <span class="toc-text"> 类和对象的内存分配机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95"><span class="toc-number">1.4.</span> <span class="toc-text"> 成员方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-number">1.4.1.</span> <span class="toc-text"> 成员方法的定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95%E4%BC%A0%E5%8F%82%E6%9C%BA%E5%88%B6"><span class="toc-number">1.4.2.</span> <span class="toc-text"> 成员方法传参机制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%92%E5%BD%92"><span class="toc-number">1.5.</span> <span class="toc-text"> 递归</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E9%87%8D%E8%BD%BDoverload"><span class="toc-number">1.6.</span> <span class="toc-text"> 方法重载(OverLoad)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0"><span class="toc-number">1.7.</span> <span class="toc-text"> 可变参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="toc-number">1.8.</span> <span class="toc-text"> 作用域</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95%E6%9E%84%E9%80%A0%E5%99%A8"><span class="toc-number">1.9.</span> <span class="toc-text"> 构造方法&#x2F;构造器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#this%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">1.10.</span> <span class="toc-text"> this关键字</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/09/27/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%85%AD%EF%BC%89/" title="Java学习笔记（六）"><img src="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/%E5%A4%8F%E6%97%A5%E6%99%B4%E5%A4%A9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java学习笔记（六）"/></a><div class="content"><a class="title" href="/2025/09/27/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%85%AD%EF%BC%89/" title="Java学习笔记（六）">Java学习笔记（六）</a><time datetime="2025-09-27T13:34:51.000Z" title="发表于 2025-09-27 21:34:51">2025-09-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/20/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%94%EF%BC%89/" title="Java学习笔记（五）"><img src="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/%E5%A4%8F%E6%97%A5%E6%99%B4%E5%A4%A9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java学习笔记（五）"/></a><div class="content"><a class="title" href="/2025/09/20/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%94%EF%BC%89/" title="Java学习笔记（五）">Java学习笔记（五）</a><time datetime="2025-09-20T12:06:36.000Z" title="发表于 2025-09-20 20:06:36">2025-09-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/18/%E6%88%90%E4%B8%BAJava%E5%A4%A7%E4%BD%AC%E7%9A%84%E5%85%AB%E5%8D%81%E4%B8%80%E9%9A%BE/" title="成为Java大佬的八十一难"><img src="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/小卖部.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="成为Java大佬的八十一难"/></a><div class="content"><a class="title" href="/2025/09/18/%E6%88%90%E4%B8%BAJava%E5%A4%A7%E4%BD%AC%E7%9A%84%E5%85%AB%E5%8D%81%E4%B8%80%E9%9A%BE/" title="成为Java大佬的八十一难">成为Java大佬的八十一难</a><time datetime="2025-09-18T14:36:37.000Z" title="发表于 2025-09-18 22:36:37">2025-09-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/17/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%9B%9B%EF%BC%89/" title="Java学习笔记（四）"><img src="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/%E5%A4%8F%E6%97%A5%E6%99%B4%E5%A4%A9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java学习笔记（四）"/></a><div class="content"><a class="title" href="/2025/09/17/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%9B%9B%EF%BC%89/" title="Java学习笔记（四）">Java学习笔记（四）</a><time datetime="2025-09-17T13:51:57.000Z" title="发表于 2025-09-17 21:51:57">2025-09-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/10/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/" title="Java学习笔记（三）"><img src="https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/%E5%A4%8F%E6%97%A5%E6%99%B4%E5%A4%A9.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java学习笔记（三）"/></a><div class="content"><a class="title" href="/2025/09/10/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/" title="Java学习笔记（三）">Java学习笔记（三）</a><time datetime="2025-09-10T12:34:43.000Z" title="发表于 2025-09-10 20:34:43">2025-09-10</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://cdn.jsdelivr.net/gh/zhangguixuan/picgo-Image-hosting-service/img/%E5%A4%8F%E6%97%A5%E6%99%B4%E5%A4%A9.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By 会魔法的麻瓜</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.0</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      true
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
